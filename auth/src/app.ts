@@ -10,7 +10,7 @@ import {signupRouter} from './routes/signup';
 import {changePasswordRouter} from './routes/change-password';
 import {merchantSigninRouter} from './routes/merchant-signin';
 import {merchantSignupRouter} from './routes/merchant-signup';
-import {testRouter} from './routes/test';
+// import {testRouter} from './routes/test';
 import {errorHandler,NotFoundError} from '@gazmer-ecomm2/common';
 
 const app = express();
@@ -30,7 +30,7 @@ app.use(signupRouter);
 app.use(changePasswordRouter);
 app.use(merchantSigninRouter);
 app.use(merchantSignupRouter);
-app.use(testRouter);
+// app.use(testRouter);
 
 app.all('*',()=>{
     throw new NotFoundError();

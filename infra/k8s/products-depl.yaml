@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      containers:
+        - name: products
+          image: ecomm2/products
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://products-mongo-srv:27017/products'
+            - name: accessKeyId
+              value: 'AKIART3MJ7CB6Y5YICVL'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: AWS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aws-key
+                  key: AWS_SECRET
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: 'ecomm2'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-srv
+spec:
+  selector:
+    app: products
+  ports:
+    - name: products
+      protocol: TCP
+      port: 4000
+      targetPort: 4000
